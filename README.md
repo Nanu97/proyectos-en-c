@@ -1,4 +1,5 @@
 # Proyectos-en-c
+Tecnicatura en Programación Informática (UNSAM)
 Resolucion de ejercicios 1er cuatrimestre
 
 Este repositorio contiene distintos ejercicios y proyectos desarrollados en lenguaje C, creados como práctica durante el aprendizaje de programación estructurada.
