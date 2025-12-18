@@ -1,4 +1,4 @@
-# Proyectos-en-c
+# Proyectos en C
 Tecnicatura en Programación Informática (UNSAM)
 
 Resolucion de ejercicios 1er cuatrimestre
