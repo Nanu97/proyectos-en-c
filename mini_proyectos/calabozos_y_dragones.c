@@ -43,7 +43,7 @@ int main() {
 
         if (A == 1 && B == 1 && C == 1) {
 
-            printf("BLUUUUUUUUM... PLAFFFFFFF... Mataste al dragon blanco!!!\n");
+            printf("RRROOOARGH... THUUUUM... Mataste al dragon blanco!!!\n");
             return 0;
 
         }
