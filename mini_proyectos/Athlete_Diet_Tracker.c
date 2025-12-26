@@ -263,7 +263,7 @@ int main() {
     for (int p=0; p<DAYS; p++) {
 
         if (calorias[p] == 0) {
-            printf("El dia [%d], el atleta no consumio calorias.\n", p+1);
+            printf("El dia [%d], el atleta no comio.\n", p+1);
         }
 
     }
