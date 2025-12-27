@@ -124,7 +124,7 @@ int main() {
 
             if (item == 1) {
                 printf("Producto: Agua\n");
-                printf("Unidades vendidas: %d\n");
+                printf("Unidades vendidas: %d\n", agua);
                 printf("Recaudacion: $%d\n", rec_agua);
             } else if (item == 2) {
                 printf("Producto: Gaseosa\n");
