@@ -24,7 +24,7 @@ int leerEntero() {
 int main() {
 
     int op, item, cantidad;
-    int precio, aux;
+    int precio;
 
     int dineroTot = 0;
     int cantItems = 0;
@@ -53,7 +53,6 @@ int main() {
 
         switch (op) {
 
-        /* ---------------- REGISTRAR VENTA ---------------- */
         case 1:
 
             printf("\nSeleccione el producto:\n");
@@ -93,15 +92,13 @@ int main() {
                 rec_alfajor += cantidad * precio;
             }
 
-            aux = cantidad * precio;
-            dineroTot += aux;
+            dineroTot += cantidad * precio;
             cantItems += cantidad;
             ventas++;
 
             printf("\nVenta registrada!\n");
             break;
 
-        /* ---------------- MOSTRAR TOTALES ---------------- */
         case 2:
 
             printf("\n---- ESTADISTICAS DE VENTAS ----\n");
@@ -112,7 +109,6 @@ int main() {
             printf("Dinero total recaudado: $%d\n", dineroTot);
             break;
 
-        /* ---------------- CONSULTAR PRODUCTO ---------------- */
         case 3:
 
             printf("\nSeleccione el producto:\n");
@@ -128,7 +124,7 @@ int main() {
 
             if (item == 1) {
                 printf("Producto: Agua\n");
-                printf("Unidades vendidas: %d\n", agua);
+                printf("Unidades vendidas: %d\n");
                 printf("Recaudacion: $%d\n", rec_agua);
             } else if (item == 2) {
                 printf("Producto: Gaseosa\n");
@@ -144,8 +140,6 @@ int main() {
         }
 
     } while (op != 4);
-
-    /* ---------------- RESUMEN FINAL ---------------- */
 
     if (agua > gaseosa && agua > alfajor)
         masVendido = 1;
