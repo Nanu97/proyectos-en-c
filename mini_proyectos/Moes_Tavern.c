@@ -1,6 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <ctype.h>
 
 #define DAYS 7
 #define PRECIO_POOL 5000
@@ -32,6 +31,81 @@ int leerEntero() {
     return num;
 }
 
+int mostrarMenu() {
+
+    int opcion;
+
+    printf("\n1) Ingresar pedido\n");
+    printf("2) Mostrar dia con mayores ventas\n");
+    printf("3) Mostrar total de ventas del dia actual\n");
+    printf("4) Contador semanal de cervezas\n");
+    printf("5) Finalizar dia\n");
+    printf("\nElija una opcion: ");
+
+    do {
+        opcion = leerEntero();
+
+        if ((opcion < 1 || opcion > 5) && opcion != 99) {
+            printf("Opcion invalida. Intente nuevamente: ");
+        }
+
+    } while ((opcion < 1 || opcion > 5) && opcion != 99);
+
+    return opcion;
+}
+
+int elegirProducto() {
+
+    int order;
+
+    printf("\n1) Mesa de pool ($%d)\n", PRECIO_POOL);
+    printf("2) Cerveza ($%d)\n", PRECIO_CERVEZA);
+    printf("3) Rocola ($%d)\n", PRECIO_ROCOLA);
+    printf("4) Llamarada Moe (trago de autor, $%d)\n", PRECIO_LM);
+    printf("\nSu pedido: ");
+
+    do {
+
+        order = leerEntero();
+
+            if (order < 1 || order > 4) {
+                printf("Opcion invalida.\n");
+            }
+
+        } while (order < 1 || order > 4);
+
+    return order;
+}
+
+char pedirCliente() {
+
+    char who;
+
+    printf("\nQuien pidio la cerveza:\n");
+    printf("H) Homero\n");
+    printf("B) Barney\n");
+    printf("U) Otra persona\n");
+    printf("Opcion: ");
+
+    do {
+        scanf(" %c", &who);
+        limpiarBuffer();
+
+        if (who != 'H' && who != 'h' &&
+            who != 'B' && who != 'b' &&
+            who != 'U' && who != 'u') {
+
+            printf("Opcion invalida. Reintente: ");
+        }
+
+    } while (who != 'H' && who != 'h' &&
+             who != 'B' && who != 'b' &&
+             who != 'U' && who != 'u');
+
+    return toupper(who);
+}
+
+
 int main() {
 
     int op, pedido;
@@ -45,12 +119,22 @@ int main() {
     int barney = 0;
     int unknown = 0;
     int recauBarney = 0;
+    int stock_pool, totPool = 0, recauPool = 0;
+    int stock_beer, totBeer = 0, recauBeer = 0;
+    int stock_rocola, totRoc = 0, recauRoc = 0;
+    int stock_lm, totLM = 0, recauLM = 0;
 
     printf("***** LA TABERNA DE MOE *****\n");
 
     for (int i=0; i<DAYS; i++) {
 
             homeroDia = 0;
+
+            //Reinicio de stock diario.
+            stock_pool = 50;
+            stock_beer = 100;
+            stock_rocola = 50;
+            stock_lm = 20;
 
             printf("\nDia %d\n", i+1);
             printf("======\n");
@@ -60,113 +144,116 @@ int main() {
             //Mostrar menú hasta que el usuario elija salir (opcion 5).
             while (!salirDia) {
 
-                //MENÚ
-                printf("\n1) Ingresar pedido\n");
-                printf("2) Mostrar dia con mayores ventas\n");
-                printf("3) Mostrar total de ventas del dia actual\n");
-                printf("4) Contador semanal de cervezas\n");
-                printf("5) Finalizar dia\n");
-                printf("\nElija una opcion: ");
+                op = mostrarMenu();
 
-            do {
-
-                op = leerEntero();
-
-                if (op < 1 || op > 5) {
-                    printf("Opcion invalida.\n");
+                //Opcion oculta.
+                if (op == 99) {
+                    printf("Dia cerrado por emergencia\n\n");
+                    break;
                 }
-
-            } while (op < 1 || op > 5);
 
         switch (op) {
 
         case 1:
 
-            printf("\n1) Mesa de pool ($%d)\n", PRECIO_POOL);
-            printf("2) Cerveza ($%d)\n", PRECIO_CERVEZA);
-            printf("3) Rocola ($%d)\n", PRECIO_ROCOLA);
-            printf("4) Llamarada Moe (trago de autor, $%d)\n", PRECIO_LM);
-            printf("\nSu pedido: ");
-
-            do {
-
-                pedido = leerEntero();
-
-                if (pedido < 1 || pedido > 4) {
-                    printf("Opcion invalida.\n");
-                }
-
-            } while (pedido < 1 || pedido > 4);
+            pedido = elegirProducto();
 
             switch (pedido) {
 
             case 1:
 
-                recauDia[i] += PRECIO_POOL;
-                totRecau += PRECIO_POOL;
+                if (stock_pool <= 0) {
+                    printf("Producto agotado.\n");
+                    break;
+                }
+
+                    recauDia[i] += PRECIO_POOL;
+                    totRecau += PRECIO_POOL;
+                    stock_pool--;
+                    ventas[i]++;
+                    totVentas++;
+                    totPool++;
+                    recauPool += PRECIO_POOL;
 
                 break;
 
             case 2:
 
-                printf("\nQuien pidio la cerveza:\n");
-                printf("Homero --> Ingresar 'H'\n");
-                printf("Barney --> Ingresar 'B'\n");
-                printf("Otra persona --> Ingresar 'U'\n");
+                if (stock_beer <= 0) {
+                    printf("Producto agotado.\n");
+                    break;
+                }
 
-                do {
+                who = pedirCliente();
 
-                    //Se deja un espacio para saltear basura y leer la letra real.
-                    scanf(" %c", &who);
-                    limpiarBuffer();
+                int precioCerveza = PRECIO_CERVEZA;
 
-                    if (who != 'B' && who != 'b' && who != 'H' && who != 'h'
-                        && who != 'U' && who != 'u') {
-                            printf("Opcion invalida.\n");
-                            continue;
-                        }
+                stock_beer--;
+                ventas[i]++;
+                totVentas++;
+                totBeer++;
 
-                } while (who != 'B' && who != 'b' && who != 'H' && who != 'h'
-                         && who != 'U' && who != 'u');
-
-                recauDia[i] += PRECIO_CERVEZA;
-                totRecau += PRECIO_CERVEZA;
-
-                if (who == 'B' || who == 'b') {
+                if (who == 'B') {
                     barney++;
                     recauBarney  += PRECIO_CERVEZA;
 
                 }
 
-                else if (who == 'H' || who == 'h') {
+                else if (who == 'H') {
                     homero++;
                     homeroDia++;
+
+                    if (homeroDia == 4) {
+                        precioCerveza = 0;
+                        printf("Beneficio cliente frecuente: 4ta cerveza GRATIS!\n");
+                    }
                 }
 
                 else {
                     unknown++;
                 }
 
+                recauDia[i] += precioCerveza;
+                totRecau += precioCerveza;
+                recauBeer += precioCerveza;
+
                 break;
 
             case 3:
 
-                recauDia[i] += PRECIO_ROCOLA;
-                totRecau += PRECIO_ROCOLA;
+                if (stock_rocola <= 0) {
+                    printf("Producto agotado.\n");
+                    break;
+                }
+
+                    recauDia[i] += PRECIO_ROCOLA;
+                    totRecau += PRECIO_ROCOLA;
+                    stock_rocola--;
+                    ventas[i]++;
+                    totVentas++;
+                    totRoc++;
+                    recauRoc += PRECIO_ROCOLA;
 
                 break;
 
             case 4:
 
-                recauDia[i] += PRECIO_LM;
-                totRecau += PRECIO_LM;
+                if (stock_lm <= 0) {
+                    printf("Producto agotado.\n");
+                    break;
+                }
+
+                    recauDia[i] += PRECIO_LM;
+                    totRecau += PRECIO_LM;
+                    stock_lm--;
+                    ventas[i]++;
+                    totVentas++;
+                    totLM++;
+                    recauLM += PRECIO_LM;
 
                 break;
 
             } //Fin del switch interno
-
-            ventas[i]++;
-            totVentas++;
 
             break;
 
@@ -255,8 +342,26 @@ int main() {
 
     printf("Dia de MAYORES ventas: [DIA %d]\n", diaMasVentas);
     printf("Dia de MENORES ventas: [DIA %d]\n", diaMenosVentas);
-    printf("Total recaudado: $%d\n", totRecau);
-    printf("Recaudacion por cervezas vendidas a Barney: %d\n", recauBarney);
+    printf("Total recaudado: $%d\n\n", totRecau);
+    printf("--- RECAUDACION POR PRODUCTO ---\n\n");
+    printf("Pool: $%d\n", recauPool);
+    printf("Cerveza: $%d\n", recauBeer);
+    printf("Rocola: $%d\n", recauRoc);
+    printf("Llamarada Moe: $%d\n\n", recauLM);
+
+    //Estadística especial.
+    printf("* Recaudacion por cervezas vendidas a Barney: %d\n\n", recauBarney);
+    printf("--- CONTADOR SEMANAL DE VENTAS Y PORCENTAJE RESPECTO AL TOTAL ---\n");
+    if (totVentas == 0) {
+        printf("No se registraron ventas en la semana.\n");
+    }
+    else {
+    printf("Pool: %d (%.2f%%) | Cerveza: %d (%.2f%%) | Rocola: %d (%.2f%%) | Llamarada Moe: %d (%.2f%%)\n",
+           totPool, ((float)totPool * 100) / totVentas,
+           totBeer, ((float)totBeer * 100) / totVentas,
+           totRoc, ((float)totRoc * 100) / totVentas,
+           totLM, ((float)totLM * 100) / totVentas);
+        }
 
     return 0;
 }
